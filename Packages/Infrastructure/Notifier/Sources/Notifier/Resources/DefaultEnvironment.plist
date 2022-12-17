@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Ably API key</key>
+	<string>VFlxKg.Znr1gQ:mlyMFF0YUnMfsD20sqGNY4zhicUdcRWC_YN8S81hiMo</string>
+	<key>Ably API client id</key>
+	<string>MarvelCompanion</string>
+	<key>Ably API channel</key>
+	<string>Marvelous</string>
+</dict>
+</plist>

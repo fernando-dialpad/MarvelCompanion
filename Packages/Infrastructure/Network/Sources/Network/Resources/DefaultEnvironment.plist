@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Marvel API timestamp</key>
+	<string>now-or-never</string>
+	<key>Marvel API key</key>
+	<string>7ec20a4f20de41dbc3651aaa7036f510</string>
+	<key>Marvel API hash</key>
+	<string>a640da9f3893962e0ff993ec37034eb0</string>
+	<key>Marvel API characters url</key>
+	<string>https://gateway.marvel.com:443/v1/public/characters?apikey=%@&amp;ts=%@&amp;hash=%@</string>
+	<key>Marvel API characters by id url</key>
+	<string>https://gateway.marvel.com:443/v1/public/characters/%@?apikey=%@&amp;ts=%@&amp;hash=%@</string>
+	<key>Marvel API events url</key>
+	<string>https://gateway.marvel.com:443/v1/public/events?apikey=%@&amp;ts=%@&amp;hash=%@</string>
+</dict>
+</plist>
