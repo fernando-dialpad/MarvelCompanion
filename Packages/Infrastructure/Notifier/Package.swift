@@ -13,10 +13,8 @@ let package = Package(
             targets: ["Notifier"]),
     ],
     dependencies: [
-//        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "main"),
         .package(url: "https://github.com/ably/ably-cocoa", from: "1.2.19"),
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "0.0.3"),
-        .package(path: "../../Support/SharedModels"),
         .package(path: "../../Support/Core"),
     ],
     targets: [
@@ -25,10 +23,8 @@ let package = Package(
         .target(
             name: "Notifier",
             dependencies: [
-//                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
                 .product(name: "Ably", package: "ably-cocoa"),
-                .product(name: "SharedModels", package: "SharedModels"),
                 .product(name: "Core", package: "Core")
             ],
             resources: [

@@ -49,7 +49,6 @@
 		0B38B3B4294E161C0029ABBB /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
 		0B576460294B68EB00862BA5 /* AppRoot */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AppRoot; sourceTree = "<group>"; };
 		0B576463294B6B8F00862BA5 /* infrastructure-graph.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "infrastructure-graph.svg"; path = "Dependencies/infrastructure-graph.svg"; sourceTree = SOURCE_ROOT; };
-		0B576464294B6BA500862BA5 /* merge-graphviz.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; name = "merge-graphviz.pl"; path = "Scripts/merge-graphviz.pl"; sourceTree = SOURCE_ROOT; };
 		0B576465294B6C6B00862BA5 /* MarvelCharacter */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MarvelCharacter; sourceTree = "<group>"; };
 		0B576466294B6D6000862BA5 /* app-graph.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "app-graph.svg"; path = "Dependencies/app-graph.svg"; sourceTree = SOURCE_ROOT; };
 		0B576467294B6D6000862BA5 /* characters-graph.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "characters-graph.svg"; path = "Dependencies/characters-graph.svg"; sourceTree = SOURCE_ROOT; };
@@ -119,14 +118,6 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		0B576461294B6AAC00862BA5 /* Scripts */ = {
-			isa = PBXGroup;
-			children = (
-				0B576464294B6BA500862BA5 /* merge-graphviz.pl */,
-			);
-			name = Scripts;
-			sourceTree = "<group>";
-		};
 		0B576462294B6B7700862BA5 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,7 +182,6 @@
 			isa = PBXGroup;
 			children = (
 				0B576462294B6B7700862BA5 /* Dependencies */,
-				0B576461294B6AAC00862BA5 /* Scripts */,
 				0B38B3B4294E161C0029ABBB /* .gitignore */,
 				0B215A76294B4E23006FA44E /* .swiftlint.yml */,
 				0B215A74294B4E23006FA44E /* Brewfile */,
