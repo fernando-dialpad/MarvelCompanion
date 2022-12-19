@@ -19,13 +19,14 @@ public struct NetworkConfig {
         let charactersFormat = environmentDict["Marvel API characters url"] ?? ""
         let charactersByIdFormat = environmentDict["Marvel API characters by id url"] ?? ""
         let eventsFormat = environmentDict["Marvel API events url"] ?? ""
+        let resultsCount = environmentDict["Marvel API results count"] ?? ""
         endpoints = NetworkEndpoints(
             characters: .init(
                 characterByIdFormat: String(format: charactersByIdFormat, "%d", key, timestamp, hash),
-                charactersFormat: String(format: charactersFormat, key, timestamp, hash)
+                charactersFormat: String(format: charactersFormat, key, timestamp, hash, resultsCount)
             ),
             events: .init(
-                eventsFormat: String(format: eventsFormat, key, timestamp, hash)
+                eventsFormat: String(format: eventsFormat, key, timestamp, hash, resultsCount)
             )
         )
     }

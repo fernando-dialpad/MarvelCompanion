@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "DataManager",
-    platforms: [.iOS(.v15)],
+    platforms: [.iOS(.v16)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -15,8 +15,6 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(path: "../../Support/SharedModels"),
-        .package(path: "../../Support/Core"),
         .package(path: "../Network"),
         .package(path: "../Notifier"),
         .package(path: "../Storage")
@@ -27,8 +25,6 @@ let package = Package(
         .target(
             name: "DataManager",
             dependencies: [
-                .product(name: "SharedModels", package: "SharedModels"),
-                .product(name: "Core", package: "Core"),
                 .product(name: "Network", package: "Network"),
                 .product(name: "Notifier", package: "Notifier"),
                 .product(name: "Storage", package: "Storage")

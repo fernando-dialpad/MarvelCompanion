@@ -7,62 +7,53 @@ import Notifier
 
 public final class MarvelDataManager {
     @Dependency private var marvelService: MarvelService
-    @Dependency private var storageService: MarvelStorageService
+    @Dependency private var storageService: StorageService
     @Dependency private var notificationService: NotificationService
     private lazy var decoder = MarvelJSONDecoder()
 
     public init() {}
 
-    public var newMarvelCharacters: AsyncStream<MarvelCharacter> {
-        AsyncStream { continuation in
-            Task {
-                for await notification in notificationService.pushNotifications {
-                    guard let character = try? decoder.decodeAll([MarvelCharacter].self, from: notification).first else { continue }
-                    continuation.yield(character)
-                }
-            }
-            Task {
-                for await notification in notificationService.channelNotifications {
-                    guard let character = try? decoder.decodeAll([MarvelCharacter].self, from: notification).first else { continue }
-                    continuation.yield(character)
-                }
-            }
-        }
-    }
-
     public func fetchMarvelCharacters() async throws -> [MarvelCharacter] {
-        let localCharacters = try storageService.fetchMarvelCharacters()
+        let localCharacters: [MarvelCharacter] = try storageService.fetchAll()
         guard !localCharacters.isEmpty else {
-            return try await marvelService.fetchMarvelCharacters()
+            let remoteCharacters = try await marvelService.fetchMarvelCharacters()
+            try storageService.saveAll(remoteCharacters)
+            return remoteCharacters
         }
         return localCharacters
     }
 
     public func fetchMarvelCharacter(for id: MarvelCharacter.ID) async throws -> MarvelCharacter? {
-        let localCharacter = try storageService.fetchMarvelCharacter(for: id)
+        let localCharacter: MarvelCharacter? = try storageService.fetch(for: id)
         guard localCharacter != nil else {
-            return try await marvelService.fetchMarvelCharacter(for: id)
+            let remoteCharacter = try await marvelService.fetchMarvelCharacter(for: id)
+            if let remoteCharacter = remoteCharacter {
+                try storageService.save(remoteCharacter)
+            }
+            return remoteCharacter
         }
         return localCharacter
     }
 
     public func fetchMarvelEvents() async throws -> [MarvelEvent] {
-        let localEvents = try storageService.fetchMarvelEvents()
+        let localEvents: [MarvelEvent] = try storageService.fetchAll()
         guard !localEvents.isEmpty else {
-            return try await marvelService.fetchMarvelEvents()
+            let remoteEvents = try await marvelService.fetchMarvelEvents()
+            try storageService.saveAll(remoteEvents)
+            return remoteEvents
         }
         return localEvents
     }
 
-    public func saveMarvelCharacters(characters: [MarvelCharacter]) async throws {
-        try storageService.saveMarvelCharacters(characters: characters)
+    public func saveMarvelCharacters(characters: [MarvelCharacter]) throws {
+        try storageService.saveAll(characters)
     }
 
-    public func saveMarvelEvents(events: [MarvelEvent]) async throws {
-        try storageService.saveMarvelEvents(events: events)
+    public func saveMarvelEvents(events: [MarvelEvent]) throws {
+        try storageService.saveAll(events)
     }
     
-    public func saveMarvelCharacter(character: MarvelCharacter) async throws {
-        try storageService.saveMarvelCharacter(character: character)
+    public func saveMarvelCharacter(character: MarvelCharacter) throws {
+        try storageService.save(character)
     }
 }

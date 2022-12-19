@@ -1,4 +1,4 @@
-.PHONY: graph graph-infrastructure graph-characters graph-app setup
+.PHONY: graph graph-infrastructure graph-characters graph-events graph-favorites graph-alert graph-app setup
 graph-infrastructure:
 	swift package show-dependencies --package-path Packages/Infrastructure/DataManager --format dot \
 		| perl -pe 's|.*\/(.*?)" \[label=.*?\]|"\1" \[label="\1"\]|g' \
@@ -9,12 +9,27 @@ graph-characters:
 		| perl -pe 's|.*\/(.*?)" \[label=.*?\]|"\1" \[label="\1"\]|g' \
 		| perl -pe 's|".*\/(.*?)" -> ".*\/(.*?)"|"\1" -> "\2"|g' \
 		| dot -Tsvg -o Dependencies/characters-graph.svg
+graph-events:
+	swift package show-dependencies --package-path Packages/Features/MarvelEvent --format dot \
+		| perl -pe 's|.*\/(.*?)" \[label=.*?\]|"\1" \[label="\1"\]|g' \
+		| perl -pe 's|".*\/(.*?)" -> ".*\/(.*?)"|"\1" -> "\2"|g' \
+		| dot -Tsvg -o Dependencies/events-graph.svg
+graph-favorites:
+	swift package show-dependencies --package-path Packages/Features/MarvelFavorite --format dot \
+		| perl -pe 's|.*\/(.*?)" \[label=.*?\]|"\1" \[label="\1"\]|g' \
+		| perl -pe 's|".*\/(.*?)" -> ".*\/(.*?)"|"\1" -> "\2"|g' \
+		| dot -Tsvg -o Dependencies/favorites-graph.svg
+graph-alert:
+	swift package show-dependencies --package-path Packages/Features/MarvelAlert --format dot \
+		| perl -pe 's|.*\/(.*?)" \[label=.*?\]|"\1" \[label="\1"\]|g' \
+		| perl -pe 's|".*\/(.*?)" -> ".*\/(.*?)"|"\1" -> "\2"|g' \
+		| dot -Tsvg -o Dependencies/alert-graph.svg
 graph-app:
-	swift package show-dependencies --package-path Packages/Features/AppRoot --format dot \
+	swift package show-dependencies --package-path Packages/Features/MarvelRoot --format dot \
 		| perl -pe 's|.*\/(.*?)" \[label=.*?\]|"\1" \[label="\1"\]|g' \
 		| perl -pe 's|".*\/(.*?)" -> ".*\/(.*?)"|"\1" -> "\2"|g' \
 		| dot -Tsvg -o Dependencies/app-graph.svg
-graph: graph-infrastructure graph-characters graph-app
+graph: graph-infrastructure graph-characters graph-events graph-favorites graph-alert graph-app
 
 setup:
 	brew bundle

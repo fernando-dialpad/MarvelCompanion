@@ -1,5 +1,6 @@
 import UIKit
 import Core
+import DataManager
 import Network
 import Notifier
 import Storage
@@ -12,6 +13,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         injectDependencies()
+        activateNotifications()
         return true
     }
 
@@ -37,7 +39,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         DependencyContainer.register(UserNotificationService.self, value: AppleUserNotificationService())
         DependencyContainer.register(RemoteNotificationService.self, value: AblyRemoteNotificationService(), singleton: true)
         DependencyContainer.register(MarvelService.self, value: NetworkMarvelService())
-        DependencyContainer.register(ImageService.self, value: NetworkImageService())
-        DependencyContainer.register(MarvelStorageService.self, value: UserDefaultsMarvelStorageService())
+        DependencyContainer.register(ImageService.self, value: NetworkImageService(), singleton: true)
+        DependencyContainer.register(StorageService.self, value: UserDefaultsStorageService())
+        DependencyContainer.register(MarvelDataManager.self, value: MarvelDataManager())
+        DependencyContainer.register(MarvelDataListener.self, value: MarvelDataListener())
+    }
+
+    private func activateNotifications() {
+        Task { _ = await remoteNotificationService.activate() }
     }
 }

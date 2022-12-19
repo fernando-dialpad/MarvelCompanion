@@ -1,7 +1,7 @@
 import AnyCodable
 import Foundation
 
-public class MarvelJSONDecoder: JSONDecoder {
+public final class MarvelJSONDecoder: JSONDecoder {
     let encoder: JSONEncoder
 
     public override init() {

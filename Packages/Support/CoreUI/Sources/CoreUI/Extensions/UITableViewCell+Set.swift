@@ -1,10 +1,11 @@
 import UIKit
 
 public extension UITableViewCell {
-    func set<T: UIView>(contentView: T) {
-        subviews
+    func set<T: UIView>(view: T) {
+        contentView.subviews
             .filter { $0 is T }
             .forEach { $0.removeFromSuperview() }
-        constrain(contentView)
+        contentView.addSubview(view)
+        contentView.constrain(view)
     }
 }

@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "SharedModels",
-    platforms: [.iOS(.v15)],
+    platforms: [.iOS(.v16)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -16,6 +16,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/Flight-School/AnyCodable", from: "0.6.0"),
+        .package(path: "../Assets"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -23,7 +24,8 @@ let package = Package(
         .target(
             name: "SharedModels",
             dependencies: [
-                .product(name: "AnyCodable", package: "AnyCodable")
+                .product(name: "AnyCodable", package: "AnyCodable"),
+                .product(name: "Assets", package: "Assets"),
             ]),
         .testTarget(
             name: "SharedModelsTests",

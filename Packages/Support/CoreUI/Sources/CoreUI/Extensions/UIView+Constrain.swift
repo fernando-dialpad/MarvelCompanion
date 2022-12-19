@@ -2,7 +2,6 @@ import UIKit
 
 public extension UIView {
     func constrain(_ subview: UIView, padding: UIEdgeInsets = .zero) {
-        addSubview(subview)
         NSLayoutConstraint.activate([
             subview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding.left),
             subview.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding.right),
@@ -12,7 +11,6 @@ public extension UIView {
     }
 
     func constrain(_ subview: UIActivityIndicatorView) {
-        addSubview(subview)
         NSLayoutConstraint.activate([
             subview.centerXAnchor.constraint(equalTo: centerXAnchor),
             subview.centerYAnchor.constraint(equalTo: centerYAnchor)

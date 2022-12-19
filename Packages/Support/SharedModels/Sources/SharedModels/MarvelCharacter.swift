@@ -49,14 +49,16 @@ public struct MarvelCharacter: Hashable, Codable, Identifiable {
         name = try container.decode(String.self, forKey: .name)
         description = try container.decode(String.self, forKey: .description)
         modifiedDate = try container.decode(Date.self, forKey: .modifiedDate)
-
         guard let favoriteRank = try container.decodeIfPresent(MarvelFavoriteRank.self, forKey: .favoriteRank) else {
             self.favoriteRank = .notFavorited
             let thumnailDict = try container.decode([String: AnyCodable].self, forKey: .thumbnailURL)
             let storiesDict = try container.decode([String: AnyCodable].self, forKey: .stories)
             let eventsDict = try container.decode([String: AnyCodable].self, forKey: .events)
-            guard let thumbnailPath = thumnailDict["path"]?.value as? String, let thumbnailURL = URL(string: thumbnailPath) else {
-                throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Could not parse JSON for key thumbnail.path"))
+            guard
+                let thumbnailPath = thumnailDict["path"]?.value as? String,
+                let thumbnailExtension = thumnailDict["extension"]?.value as? String,
+                let thumbnailURL = URL(string: "\(thumbnailPath).\(thumbnailExtension)") else {
+                throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Could not parse JSON for key thumbnail.path and thumbnail.extension"))
             }
             guard let availableStories = storiesDict["available"]?.value as? Int else {
                 throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Could not parse JSON for key stories.available"))

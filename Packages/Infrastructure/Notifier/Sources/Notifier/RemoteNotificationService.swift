@@ -54,7 +54,6 @@ extension AblyRemoteNotificationService: ARTPushRegistererDelegate {
     public func didActivateAblyPush(_ error: ARTErrorInfo?) {
         activatePushContinuation?.resume(returning: error == nil)
         activatePushContinuation = nil
-        print("Push id: \(String(describing: client?.device.id))")
     }
 
     public func didDeactivateAblyPush(_ error: ARTErrorInfo?) {}
