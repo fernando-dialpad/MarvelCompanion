@@ -20,7 +20,7 @@ final class MarvelCharacterListViewModel {
         var viewModels = characterViewModels.value
         switch segment {
         case .recents:
-            viewModels.sort { $0.character.value.modifiedDate < $1.character.value.modifiedDate }
+            viewModels.sort { $0.character.value.modifiedDate > $1.character.value.modifiedDate }
         case .name:
             viewModels.sort { $0.character.value.name < $1.character.value.name }
         }

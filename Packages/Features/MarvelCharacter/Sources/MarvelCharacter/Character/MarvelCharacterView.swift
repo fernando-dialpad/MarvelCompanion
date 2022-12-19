@@ -55,7 +55,7 @@ final class MarvelCharacterView: UIView {
         view.textColor = .black
         view.numberOfLines = 0
         view.adjustsFontForContentSizeCategory = true
-        view.font = .preferredFont(forTextStyle: .title3)
+        view.font = .preferredFont(forTextStyle: .title2)
             .withWeight(.bold)
         view.setContentCompressionResistancePriority(.required, for: .vertical)
         view.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -104,7 +104,6 @@ final class MarvelCharacterView: UIView {
         return view
     }()
     private var cancellables = Set<AnyCancellable>()
-    var flag = false
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

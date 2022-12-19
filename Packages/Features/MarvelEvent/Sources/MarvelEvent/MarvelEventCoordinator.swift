@@ -14,7 +14,7 @@ public class MarvelEventCoordinator {
     }
 
     public func start(animated: Bool) {
-        let viewController = MarvelEventListViewController()
+        let viewController = MarvelEventListViewController(viewModel: MarvelEventListViewModel())
         if let tabController {
             let item = UITabBarItem()
             let tab = MarvelTab.events

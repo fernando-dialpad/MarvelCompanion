@@ -6,7 +6,7 @@ class MarvelHeaderViewController: UIViewController {
     private var viewModel: MarvelHeaderViewModel
     private lazy var horizontalStackView: UIStackView = {
         let view = UIStackView()
-        view.alignment = .firstBaseline
+        view.alignment = .center
         view.axis = .horizontal
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -15,7 +15,7 @@ class MarvelHeaderViewController: UIViewController {
         let view = UILabel()
         view.textColor = .black
         view.adjustsFontForContentSizeCategory = true
-        view.font = .preferredFont(forTextStyle: .title2)
+        view.font = .preferredFont(forTextStyle: .title1)
             .withWeight(.bold)
         view.setContentHuggingPriority(.defaultLow, for: .vertical)
         view.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -65,10 +65,6 @@ class MarvelHeaderViewController: UIViewController {
         horizontalStackView.addArrangedSubview(titleLabelView)
         horizontalStackView.addArrangedSubview(favoriteLabelView)
         horizontalStackView.addArrangedSubview(favoriteImageView)
-        NSLayoutConstraint.activate([
-            favoriteImageView.widthAnchor.constraint(equalTo: favoriteImageView.heightAnchor),
-            favoriteImageView.widthAnchor.constraint(equalToConstant: 30)
-        ])
     }
 
     private func setupBindings() {
