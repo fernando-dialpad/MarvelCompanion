@@ -27,12 +27,14 @@ class MarvelEventListViewController: UIViewController, UITableViewDelegate {
         view.leftView = placeholderPaddingView
         view.leftViewMode = .always
         view.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return view
     }()
     private lazy var searchTextImageView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(systemName: "magnifyingglass")
         view.tintColor = .black
+        view.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -71,7 +73,7 @@ class MarvelEventListViewController: UIViewController, UITableViewDelegate {
             guard let self = self else { return UITableViewCell() }
             let cell = tableView.dequeueReusableCell(withIdentifier: self.cellIdentifier, for: indexPath)
             cell.selectionStyle = .none
-            cell.set(view: MarvelEventView(viewModel: viewModel))
+            cell.set(view: MarvelEventView(viewModel: viewModel), padding: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
             return cell
         }
     }()

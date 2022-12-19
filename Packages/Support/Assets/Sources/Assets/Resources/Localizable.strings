@@ -5,4 +5,9 @@
 "Favorites" = "Favorites";
 "Name" = "Name";
 "Recents" = "Recents";
+"Close" = "Close";
 "Filter Events" = "Filter Events";
+"Thank you!\nbut your hero is in another castle" = "Thank you!\nbut your hero is in another castle";
+"updated %@" = "updated %@";
+"Rank: #%d" = "Rank: #%d";
+"Events(%d)" = "Events(%d)";

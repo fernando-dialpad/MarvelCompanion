@@ -62,9 +62,14 @@ class MarvelHeaderViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(horizontalStackView)
         view.constrain(horizontalStackView, padding: .init(top: 0, left: 16, bottom: 0, right: 16))
+        let favoriteImageAspectRatio: Double = 11/10
         horizontalStackView.addArrangedSubview(titleLabelView)
         horizontalStackView.addArrangedSubview(favoriteLabelView)
         horizontalStackView.addArrangedSubview(favoriteImageView)
+        NSLayoutConstraint.activate([
+            favoriteImageView.widthAnchor.constraint(equalTo: favoriteImageView.heightAnchor, multiplier: favoriteImageAspectRatio),
+            favoriteImageView.widthAnchor.constraint(equalToConstant: 30)
+        ])
     }
 
     private func setupBindings() {

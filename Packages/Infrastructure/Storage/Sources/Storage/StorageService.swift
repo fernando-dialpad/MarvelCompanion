@@ -67,7 +67,7 @@ public final class UserDefaultsStorageService: StorageService {
             }
         }
         fetched.append(contentsOf: newItems)
-        let encoded = try encoder.encode(data)
+        let encoded = try encoder.encode(fetched)
         let key = String(describing: T.self)
         UserDefaults.standard.set(encoded, forKey: key)
     }

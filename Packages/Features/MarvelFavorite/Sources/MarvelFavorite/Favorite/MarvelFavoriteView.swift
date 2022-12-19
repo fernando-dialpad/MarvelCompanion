@@ -1,3 +1,4 @@
+import CoreUI
 import SwiftUI
 
 struct MarvelFavoriteView: View {
@@ -7,6 +8,13 @@ struct MarvelFavoriteView: View {
         self.viewModel = viewModel
     }
     var body: some View {
-        EmptyView()
+        HStack(spacing: 16) {
+            MediaContainerViewRepresentable(viewModel: viewModel.mediaContainerViewModel)
+                .frame(width: 70, height: 70)
+            Text(viewModel.character.name)
+                .font(.title2)
+                .fontWeight(.bold)
+        }
+        .onAppear { viewModel.load() }
     }
 }

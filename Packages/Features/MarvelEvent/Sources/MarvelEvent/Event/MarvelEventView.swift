@@ -121,7 +121,7 @@ final class MarvelEventView: UIView {
         backgroundColor = .white
         translatesAutoresizingMaskIntoConstraints = false
         addSubview(horizontalStackView)
-        constrain(horizontalStackView, padding: .init(top: 8, left: 16, bottom: 8, right: 16))
+        constrain(horizontalStackView, padding: .init(top: 8, left: 0, bottom: 8, right: 0))
         horizontalStackView.addArrangedSubview(mediaContainerView)
         horizontalStackView.addArrangedSubview(verticalStackView)
         verticalStackView.addArrangedSubview(headerHorizontalStackView)

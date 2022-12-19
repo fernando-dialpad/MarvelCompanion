@@ -120,7 +120,7 @@ final class MarvelCharacterView: UIView {
         backgroundColor = .white
         translatesAutoresizingMaskIntoConstraints = false
         addSubview(horizontalStackView)
-        constrain(horizontalStackView, padding: .init(top: 8, left: 16, bottom: 8, right: 16))
+        constrain(horizontalStackView, padding: .init(top: 8, left: 0, bottom: 8, right: 0))
         horizontalStackView.addArrangedSubview(mediaContainerView)
         horizontalStackView.addArrangedSubview(verticalStackView)
         verticalStackView.addArrangedSubview(headerHorizontalStackView)
@@ -146,13 +146,27 @@ final class MarvelCharacterView: UIView {
             .sink { [weak self] character in
                 self?.nameLabelView.text = character.name
                 self?.descriptionLabelView.text = character.description
-                self?.contentHorizontalStackView.isHidden = character.description.isEmpty
                 self?.storiesLabelView.text = self?.viewModel.numberOfStories(character.availableStories)
                 self?.modifiedDateLabelView.text = self?.viewModel.modifiedDate(character.modifiedDate)
                 let favoriteImage = character.favoriteRank == .notFavorited
                     ? UIImage(systemName: "star")
                     : UIImage(systemName: "star.fill")
                 self?.favoriteButtonView.setImage(favoriteImage, for: .normal)
+            }
+            .store(in: &cancellables)
+        viewModel.isDescriptionVisible
+            .sink { [weak self] isDescriptionVisible in
+                self?.contentHorizontalStackView.isHidden = !isDescriptionVisible
+            }
+            .store(in: &cancellables)
+        viewModel.isFavoriteButtonVisible
+            .sink { [weak self] isFavoriteButtonVisible in
+                self?.favoriteButtonView.isHidden = !isFavoriteButtonVisible
+            }
+            .store(in: &cancellables)
+        viewModel.isStoriesVisible
+            .sink { [weak self] isStoriesVisible in
+                self?.storiesLabelView.isHidden = !isStoriesVisible
             }
             .store(in: &cancellables)
     }

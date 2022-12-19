@@ -53,7 +53,7 @@ class MarvelCharacterListViewController: UIViewController, UITableViewDelegate {
             guard let self = self else { return UITableViewCell() }
             let cell = tableView.dequeueReusableCell(withIdentifier: self.cellIdentifier, for: indexPath)
             cell.selectionStyle = .none
-            cell.set(view: MarvelCharacterView(viewModel: viewModel))
+            cell.set(view: MarvelCharacterView(viewModel: viewModel), padding: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
             return cell
         }
     }()
@@ -110,6 +110,10 @@ class MarvelCharacterListViewController: UIViewController, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         viewModel.characterViewModels.value[indexPath.row].load()
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.select(row: indexPath.row)
     }
 
     @objc func segmentControlChange() {

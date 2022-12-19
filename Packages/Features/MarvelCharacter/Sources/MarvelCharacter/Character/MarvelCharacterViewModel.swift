@@ -9,6 +9,10 @@ import SharedModels
 final class MarvelCharacterViewModel {
     var character: CurrentValueSubject<MarvelCharacter, Never>
     var mediaContainerViewModel = MediaContainerViewModel(isRound: true, borderWidth: 0.5)
+    var isFavoriteButtonVisible = CurrentValueSubject<Bool, Never>(true)
+    var isDescriptionVisible = CurrentValueSubject<Bool, Never>(true)
+    var isStoriesVisible = CurrentValueSubject<Bool, Never>(true)
+    var modifiedDatePrefix = "%@"
     @Dependency private var dataManager: MarvelDataManager
     private lazy var relativeDateTimeFormatter: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
@@ -19,6 +23,9 @@ final class MarvelCharacterViewModel {
 
     init(character: MarvelCharacter) {
         self.character = .init(character)
+        if character.description.isEmpty {
+            isDescriptionVisible.send(false)
+        }
     }
 
     func numberOfStories(_ count: Int) -> String {
@@ -26,7 +33,8 @@ final class MarvelCharacterViewModel {
     }
 
     func modifiedDate(_ date: Date) -> String {
-        return relativeDateTimeFormatter.localizedString(for: date, relativeTo: Date.now)
+        let relativeDateTime = relativeDateTimeFormatter.localizedString(for: date, relativeTo: Date.now)
+        return String(format: modifiedDatePrefix, relativeDateTime)
     }
 
     func load() {
@@ -34,12 +42,53 @@ final class MarvelCharacterViewModel {
     }
 
     func toggleFavorite() {
-        var character = self.character.value
-        character.favoriteRank = character.favoriteRank == .notFavorited
-            ? .favorited(rank: 0)
-            : .notFavorited
-        try? dataManager.saveMarvelCharacter(character: character)
-        self.character.send(character)
+        Task { @MainActor in
+            var favoritedCharacters = try await getFavoritedCharacters()
+            let maximumRank = getMaximumRank(favoritedCharacters: favoritedCharacters)
+            var character = self.character.value
+            if character.favoriteRank == .notFavorited {
+                character.favoriteRank = .favorited(rank: maximumRank + 1)
+                try? dataManager.saveMarvelCharacter(character: character)
+            } else {
+                character.favoriteRank = .notFavorited
+                try? dataManager.saveMarvelCharacter(character: character)
+                favoritedCharacters.removeAll { $0.id == character.id }
+                organizeRanks(favoritedCharacters: &favoritedCharacters)
+                try? dataManager.saveMarvelCharacters(characters: favoritedCharacters)
+            }
+            self.character.send(character)
+        }
+    }
+
+    private func getMaximumRank(favoritedCharacters: [MarvelCharacter]) -> Int {
+        favoritedCharacters
+            .map {
+                if case let .favorited(rank) = $0.favoriteRank {
+                    return rank
+                } else {
+                    return 0
+                }
+            }
+            .max() ?? 0
+    }
+
+    private func getFavoritedCharacters() async throws-> [MarvelCharacter] {
+        try await dataManager.fetchMarvelCharacters()
+            .filter { $0.favoriteRank != .notFavorited }
+            .sorted {
+                if case let .favorited(rank1) = $0.favoriteRank, case let .favorited(rank2) = $1.favoriteRank {
+                    return rank1 < rank2
+                }
+                return false
+            }
+    }
+
+    private func organizeRanks(favoritedCharacters: inout [MarvelCharacter]) {
+        var rank = 1
+        for index in favoritedCharacters.indices {
+            favoritedCharacters[index].favoriteRank = .favorited(rank: rank)
+            rank += 1
+        }
     }
 }
 
