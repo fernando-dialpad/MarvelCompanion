@@ -17,7 +17,6 @@ let package = Package(
         .package(path: "../MarvelEvent"),
         .package(path: "../MarvelFavorite"),
         .package(path: "../MarvelAlert"),
-        .package(path: "../../Infrastructure/Notifier"),
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
@@ -30,8 +29,7 @@ let package = Package(
                 .product(name: "MarvelCharacter", package: "MarvelCharacter"),
                 .product(name: "MarvelEvent", package: "MarvelEvent"),
                 .product(name: "MarvelFavorite", package: "MarvelFavorite"),
-                .product(name: "MarvelAlert", package: "MarvelAlert"),
-                .product(name: "Notifier", package: "Notifier")
+                .product(name: "MarvelAlert", package: "MarvelAlert")
             ]),
         .testTarget(
             name: "MarvelRootTests",

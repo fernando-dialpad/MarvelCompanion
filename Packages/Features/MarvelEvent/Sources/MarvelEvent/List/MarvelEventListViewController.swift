@@ -77,6 +77,12 @@ class MarvelEventListViewController: UIViewController, UITableViewDelegate {
             return cell
         }
     }()
+    lazy var activityIndicator: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .medium)
+        view.startAnimating()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     private var cancellables = Set<AnyCancellable>()
 
     init(viewModel: MarvelEventListViewModel) {
@@ -102,6 +108,8 @@ class MarvelEventListViewController: UIViewController, UITableViewDelegate {
         tableView.delegate = self
         view.addSubview(verticalStackView)
         view.constrain(verticalStackView)
+        view.addSubview(activityIndicator)
+        view.constrain(activityIndicator)
         verticalStackView.addArrangedSubview(searchContainerView)
         verticalStackView.addArrangedSubview(dividerView)
         verticalStackView.addArrangedSubview(tableView)
@@ -124,6 +132,13 @@ class MarvelEventListViewController: UIViewController, UITableViewDelegate {
                 snapshot.appendSections(Section.allCases)
                 snapshot.appendItems($0, toSection: .main)
                 self?.dataSource?.apply(snapshot, animatingDifferences: false)
+            }
+            .store(in: &cancellables)
+        viewModel
+            .isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.activityIndicator.isHidden = !isLoading
             }
             .store(in: &cancellables)
     }

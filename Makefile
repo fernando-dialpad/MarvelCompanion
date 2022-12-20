@@ -1,4 +1,4 @@
-.PHONY: graph graph-infrastructure graph-characters graph-events graph-favorites graph-alert graph-app setup
+.PHONY: graph graph-infrastructure graph-characters graph-events graph-favorites graph-alert graph-app graph-features setup
 graph-infrastructure:
 	swift package show-dependencies --package-path Packages/Infrastructure/DataManager --format dot \
 		| perl -pe 's|.*\/(.*?)" \[label=.*?\]|"\1" \[label="\1"\]|g' \
@@ -29,7 +29,16 @@ graph-app:
 		| perl -pe 's|.*\/(.*?)" \[label=.*?\]|"\1" \[label="\1"\]|g' \
 		| perl -pe 's|".*\/(.*?)" -> ".*\/(.*?)"|"\1" -> "\2"|g' \
 		| dot -Tsvg -o Dependencies/app-graph.svg
-graph: graph-infrastructure graph-characters graph-events graph-favorites graph-alert graph-app
+graph-features:
+	swift package show-dependencies --package-path Packages/Features/MarvelRoot --format dot \
+		| perl -pe 's|.*\/(.*?)" \[label=.*?\]|"\1" \[label="\1"\]|g' \
+		| perl -pe 's|".*\/(.*?)" -> ".*\/(.*?)"|"\1" -> "\2"|g' \
+		| grep -E 'digraph DependenciesGraph {|node \[shape = box\]|}|Marvel' \
+		| grep -v 'DataManager' \
+		| grep -v 'Notifier' \
+		| grep -v 'CoreUI' \
+		| dot -Tsvg -o Dependencies/features-graph.svg
+graph: graph-infrastructure graph-characters graph-events graph-favorites graph-alert graph-features graph-app
 
 setup:
 	brew bundle

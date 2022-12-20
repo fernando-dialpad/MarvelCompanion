@@ -79,6 +79,7 @@
 		0B807B77294904D500675CAE /* AppUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppUITests.swift; sourceTree = "<group>"; };
 		0B925600294B878D00C1C509 /* MarvelFavorite */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MarvelFavorite; sourceTree = "<group>"; };
 		0B925675294CA57F00C1C509 /* Debug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Debug.entitlements; sourceTree = "<group>"; };
+		0BBFD17D295205390031037C /* features-graph.svg */ = {isa = PBXFileReference; lastKnownFileType = file; name = "features-graph.svg"; path = "Dependencies/features-graph.svg"; sourceTree = SOURCE_ROOT; };
 		0BF77E52294B47AC00BD431D /* Storage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Storage; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -166,12 +167,13 @@
 		0B576462294B6B7700862BA5 /* Dependency graph */ = {
 			isa = PBXGroup;
 			children = (
+				0BBFD17D295205390031037C /* features-graph.svg */,
+				0B576463294B6B8F00862BA5 /* infrastructure-graph.svg */,
 				0B38B3C3294F627B0029ABBB /* alert-graph.svg */,
 				0B38B3C4294F627B0029ABBB /* events-graph.svg */,
 				0B38B3C2294F627B0029ABBB /* favorites-graph.svg */,
 				0B576466294B6D6000862BA5 /* app-graph.svg */,
 				0B576467294B6D6000862BA5 /* characters-graph.svg */,
-				0B576463294B6B8F00862BA5 /* infrastructure-graph.svg */,
 			);
 			name = "Dependency graph";
 			path = "Support Files";

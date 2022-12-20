@@ -37,7 +37,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     private func injectDependencies() {
         DependencyContainer.register(NetworkConfig.self, value: NetworkConfig(environment: .defaultEnvironment))
         DependencyContainer.register(NotifierConfig.self, value: NotifierConfig(environment: .defaultEnvironment))
-        DependencyContainer.register(UserNotificationService.self, value: AppleUserNotificationService(), singleton: true)
+        DependencyContainer.register(UserNotificationService.self, value: AppleUserNotificationService())
         DependencyContainer.register(RemoteNotificationService.self, value: AblyRemoteNotificationService(), singleton: true)
         DependencyContainer.register(MarvelService.self, value: NetworkMarvelService())
         DependencyContainer.register(ImageService.self, value: NetworkImageService(), singleton: true)

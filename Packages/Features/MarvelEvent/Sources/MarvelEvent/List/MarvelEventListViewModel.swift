@@ -5,12 +5,14 @@ import DataManager
 
 final class MarvelEventListViewModel {
     var eventViewModels = CurrentValueSubject<[MarvelEventViewModel], Never>([])
+    var isLoading = CurrentValueSubject<Bool, Never>(false)
     var unfilteredViewModels: [MarvelEventViewModel] = []
     @Dependency var dataManager: MarvelDataManager
     @Dependency var dataListener: MarvelDataManager
 
     func load() {
         Task { @MainActor in
+            isLoading.send(true)
             let events = try await dataManager.fetchMarvelEvents()
             let characters = try await dataManager.fetchMarvelCharacters()
             let viewModels = events.map { event in
@@ -19,6 +21,7 @@ final class MarvelEventListViewModel {
             }
             unfilteredViewModels = viewModels
             eventViewModels.send(viewModels)
+            isLoading.send(false)
         }
     }
 

@@ -6,6 +6,7 @@ import SharedModels
 final class MarvelCharacterListViewModel {
     var characterSelected = PassthroughSubject<MarvelCharacter, Never>()
     var characterViewModels = CurrentValueSubject<[MarvelCharacterViewModel], Never>([])
+    var isLoading = CurrentValueSubject<Bool, Never>(false)
     @Dependency var dataManager: MarvelDataManager
     @Dependency var dataListener: MarvelDataListener
 
@@ -16,10 +17,12 @@ final class MarvelCharacterListViewModel {
 
     @MainActor
     func load() async throws {
+        isLoading.send(true)
         let characters = try await dataManager.fetchMarvelCharacters()
         let viewModels = characters.map(MarvelCharacterViewModel.init(character:))
         characterViewModels.send(viewModels)
         updateCharacters()
+        isLoading.send(false)
     }
 
     func sort(segment: MarvelSortSegment) {

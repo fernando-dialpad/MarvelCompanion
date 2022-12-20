@@ -48,6 +48,12 @@ class MarvelCharacterListViewController: UIViewController, UITableViewDelegate {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    lazy var activityIndicator: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .medium)
+        view.startAnimating()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     lazy var dataSource: UITableViewDiffableDataSource<Section, MarvelCharacterViewModel>? = {
         UITableViewDiffableDataSource(tableView: tableView) { [weak self] tableView, indexPath, viewModel -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
@@ -82,6 +88,8 @@ class MarvelCharacterListViewController: UIViewController, UITableViewDelegate {
         tableView.delegate = self
         view.addSubview(verticalStackView)
         view.constrain(verticalStackView)
+        view.addSubview(activityIndicator)
+        view.constrain(activityIndicator)
         verticalStackView.addArrangedSubview(segmentedControlContainer)
         verticalStackView.addArrangedSubview(dividerView)
         verticalStackView.addArrangedSubview(tableView)
@@ -104,6 +112,13 @@ class MarvelCharacterListViewController: UIViewController, UITableViewDelegate {
                 snapshot.appendSections(Section.allCases)
                 snapshot.appendItems($0, toSection: .main)
                 self?.dataSource?.apply(snapshot, animatingDifferences: false)
+            }
+            .store(in: &cancellables)
+        viewModel
+            .isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.activityIndicator.isHidden = !isLoading
             }
             .store(in: &cancellables)
     }
