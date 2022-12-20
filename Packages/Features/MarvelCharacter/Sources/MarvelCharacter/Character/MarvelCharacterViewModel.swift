@@ -41,23 +41,33 @@ final class MarvelCharacterViewModel {
         mediaContainerViewModel.load(url: character.value.thumbnailURL)
     }
 
-    func toggleFavorite() {
-        Task { @MainActor in
-            var favoritedCharacters = try await getFavoritedCharacters()
-            let maximumRank = getMaximumRank(favoritedCharacters: favoritedCharacters)
-            var character = self.character.value
-            if character.favoriteRank == .notFavorited {
-                character.favoriteRank = .favorited(rank: maximumRank + 1)
-                try? dataManager.saveMarvelCharacter(character: character)
-            } else {
-                character.favoriteRank = .notFavorited
-                try? dataManager.saveMarvelCharacter(character: character)
-                favoritedCharacters.removeAll { $0.id == character.id }
-                organizeRanks(favoritedCharacters: &favoritedCharacters)
-                try? dataManager.saveMarvelCharacters(characters: favoritedCharacters)
-            }
-            self.character.send(character)
+    @MainActor
+    func toggleFavorite() async throws {
+        var favoritedCharacters = try await getFavoritedCharacters()
+        let maximumRank = getMaximumRank(favoritedCharacters: favoritedCharacters)
+        var character = self.character.value
+        if character.favoriteRank == .notFavorited {
+            character.favoriteRank = .favorited(rank: maximumRank + 1)
+            try? dataManager.saveMarvelCharacter(character: character)
+        } else {
+            character.favoriteRank = .notFavorited
+            try? dataManager.saveMarvelCharacter(character: character)
+            favoritedCharacters.removeAll { $0.id == character.id }
+            organizeRanks(favoritedCharacters: &favoritedCharacters)
+            try? dataManager.saveMarvelCharacters(characters: favoritedCharacters)
         }
+        self.character.send(character)
+    }
+
+    private func getFavoritedCharacters() async throws-> [MarvelCharacter] {
+        try await dataManager.fetchMarvelCharacters()
+            .filter { $0.favoriteRank != .notFavorited }
+            .sorted {
+                if case let .favorited(rank1) = $0.favoriteRank, case let .favorited(rank2) = $1.favoriteRank {
+                    return rank1 < rank2
+                }
+                return false
+            }
     }
 
     private func getMaximumRank(favoritedCharacters: [MarvelCharacter]) -> Int {
@@ -70,17 +80,6 @@ final class MarvelCharacterViewModel {
                 }
             }
             .max() ?? 0
-    }
-
-    private func getFavoritedCharacters() async throws-> [MarvelCharacter] {
-        try await dataManager.fetchMarvelCharacters()
-            .filter { $0.favoriteRank != .notFavorited }
-            .sorted {
-                if case let .favorited(rank1) = $0.favoriteRank, case let .favorited(rank2) = $1.favoriteRank {
-                    return rank1 < rank2
-                }
-                return false
-            }
     }
 
     private func organizeRanks(favoritedCharacters: inout [MarvelCharacter]) {

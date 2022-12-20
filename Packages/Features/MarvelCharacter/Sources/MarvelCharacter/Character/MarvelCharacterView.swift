@@ -172,6 +172,6 @@ final class MarvelCharacterView: UIView {
     }
 
     @objc func tapFavoriteButton() {
-        viewModel.toggleFavorite()
+        Task { try await viewModel.toggleFavorite() }
     }
 }

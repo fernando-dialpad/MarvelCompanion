@@ -19,8 +19,11 @@ public final class UserDefaultsStorageService: StorageService {
         encoder.dateEncodingStrategy = .iso8601
         return encoder
     }()
+    private let userDefaults: UserDefaults
 
-    public init() {}
+    public init(userDefaults: UserDefaults = .standard) {
+        self.userDefaults = userDefaults
+    }
 
     public func updatedData<T: Codable & Identifiable>(of type: T.Type) -> AsyncStream<[T]> {
         AsyncStream { continuation in
@@ -35,7 +38,7 @@ public final class UserDefaultsStorageService: StorageService {
 
     public func fetchAll<T: Codable & Identifiable>() throws -> [T] {
         let key = String(describing: T.self)
-        guard let fetched = UserDefaults.standard.object(forKey: key) as? Data else {
+        guard let fetched = userDefaults.object(forKey: key) as? Data else {
             return []
         }
         return try decoder.decode([T].self, from: fetched)
@@ -69,6 +72,6 @@ public final class UserDefaultsStorageService: StorageService {
         fetched.append(contentsOf: newItems)
         let encoded = try encoder.encode(fetched)
         let key = String(describing: T.self)
-        UserDefaults.standard.set(encoded, forKey: key)
+        userDefaults.set(encoded, forKey: key)
     }
 }

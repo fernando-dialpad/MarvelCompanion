@@ -72,7 +72,7 @@ class MarvelCharacterListViewController: UIViewController, UITableViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.load()
+        Task { try await viewModel.load() }
     }
 
     private func setupView() {

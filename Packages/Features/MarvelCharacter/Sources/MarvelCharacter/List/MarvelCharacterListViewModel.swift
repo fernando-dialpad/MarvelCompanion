@@ -14,12 +14,11 @@ final class MarvelCharacterListViewModel {
         characterSelected.send(character)
     }
 
-    func load() {
-        Task { @MainActor in
-            let characters = try await dataManager.fetchMarvelCharacters()
-            let viewModels = characters.map(MarvelCharacterViewModel.init(character:))
-            characterViewModels.send(viewModels)
-        }
+    @MainActor
+    func load() async throws {
+        let characters = try await dataManager.fetchMarvelCharacters()
+        let viewModels = characters.map(MarvelCharacterViewModel.init(character:))
+        characterViewModels.send(viewModels)
         updateCharacters()
     }
 

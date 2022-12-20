@@ -7,8 +7,8 @@ import SharedModels
 
 final class MarvelFavoriteListViewModel: ObservableObject {
     @Published var favoriteViewModels: [MarvelFavoriteViewModel] = []
+    var arra = [1,2,3,4,5]
     @Dependency var dataManager: MarvelDataManager
-    @Dependency var dataListener: MarvelDataManager
 
     func load() {
         Task { @MainActor in
