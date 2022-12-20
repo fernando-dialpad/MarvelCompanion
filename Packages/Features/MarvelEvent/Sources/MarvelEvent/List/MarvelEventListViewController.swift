@@ -20,7 +20,7 @@ class MarvelEventListViewController: UIViewController, UITableViewDelegate {
     private lazy var searchTextFieldView: UITextField = {
         let view = UITextField()
         view.placeholder = Strings.filterEvents
-        view.backgroundColor = .main.searchBackground
+        view.backgroundColor = .main.contentBackground
         view.layer.cornerRadius = 10
         view.translatesAutoresizingMaskIntoConstraints = false
         let placeholderPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))

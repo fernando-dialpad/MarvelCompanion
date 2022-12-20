@@ -12,6 +12,7 @@ public struct Strings {
     public static let close: String = NSLocalizedString("Close", bundle: .module, comment: "")
     public static let rankNumber: String = NSLocalizedString("Rank: #%d", bundle: .module, comment: "")
     public static let eventsNumber: String = NSLocalizedString("Events(%d)", bundle: .module, comment: "")
+    public static let incoming: String = NSLocalizedString("INCOMING", bundle: .module, comment: "")
     public static func numberOfStories(count: Int) -> String {
         String.localizedStringWithFormat(
             NSLocalizedString("%d stories", bundle: .module, comment: ""),

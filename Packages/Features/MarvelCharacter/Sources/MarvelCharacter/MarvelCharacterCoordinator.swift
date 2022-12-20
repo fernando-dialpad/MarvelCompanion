@@ -65,6 +65,4 @@ public class MarvelCharacterCoordinator {
             }
             .store(in: &cancellables)
     }
-
-
 }
