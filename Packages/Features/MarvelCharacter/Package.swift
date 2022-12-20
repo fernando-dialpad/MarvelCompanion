@@ -13,7 +13,6 @@ let package = Package(
             targets: ["MarvelCharacter"]),
     ],
     dependencies: [
-//        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "main"),
         .package(path: "../../Infrastructure/DataManager"),
         .package(path: "../../Support/CoreUI")
     ],
@@ -23,7 +22,6 @@ let package = Package(
         .target(
             name: "MarvelCharacter",
             dependencies: [
-//                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "DataManager", package: "DataManager"),
                 .product(name: "CoreUI", package: "CoreUI")
             ]),

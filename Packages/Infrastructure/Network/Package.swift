@@ -13,11 +13,9 @@ let package = Package(
             targets: ["Network"]),
     ],
     dependencies: [
-//        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "main"),
         .package(path: "../../Support/SharedModels"),
         .package(path: "../../Support/Core"),
         // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -25,7 +23,6 @@ let package = Package(
         .target(
             name: "Network",
             dependencies: [
-//                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "SharedModels", package: "SharedModels"),
                 .product(name: "Core", package: "Core")
             ],
