@@ -137,37 +137,44 @@ class MarvelCharacterDetailViewController: UIViewController {
 
     private func setupBindings() {
         viewModel.isCloseVisible
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isCloseVisible in
                 self?.toolbarHorizontalStackView.isHidden = !isCloseVisible
             }
             .store(in: &cancellables)
         viewModel.isDescriptionVisible
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isDescriptionVisible in
                 self?.contentHorizontalStackView.isHidden = !isDescriptionVisible
             }
             .store(in: &cancellables)
         viewModel.isPillVisible
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isPillVisible in
                 self?.contentHorizontalStackView.isHidden = !isPillVisible
             }
             .store(in: &cancellables)
         viewModel.isEventsVisible
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isEventsVisible in
                 self?.eventsHeaderLabel.isHidden = !isEventsVisible
                 self?.eventsTitlesLabel.isHidden = !isEventsVisible
             }
             .store(in: &cancellables)
         viewModel.eventsHeader
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] eventsHeader in
                 self?.eventsHeaderLabel.text = eventsHeader
             }
             .store(in: &cancellables)
         viewModel.eventsTitles
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] eventsTitles in
                 self?.eventsTitlesLabel.text = eventsTitles
             }
             .store(in: &cancellables)
         viewModel.characterViewModel.character
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] character in
                 if case let .favorited(rank) = character.favoriteRank {
                     self?.viewModel.pillViewModel.text.send(String(format: Strings.rankNumber, rank))
