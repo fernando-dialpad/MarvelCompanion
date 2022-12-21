@@ -98,7 +98,7 @@ final class MarvelCharacterAlertViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.load()
+        Task { try await viewModel.load() } 
     }
 
     private func setupView() {
@@ -131,11 +131,13 @@ final class MarvelCharacterAlertViewController: UIViewController {
 
     private func setupBindings() {
         viewModel.character
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] character in
                 self?.nameLabelView.text = character.name
             }
             .store(in: &cancellables)
         viewModel.eventsTitles
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] eventsTitles in
                 self?.eventsLabelView.text = eventsTitles
             }

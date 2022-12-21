@@ -102,12 +102,12 @@ class MarvelCharacterDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.load()
+        Task { try await viewModel.load() }
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        viewModel.appear()
+        Task { try await viewModel.appear() }
     }
 
     private func setupView() {

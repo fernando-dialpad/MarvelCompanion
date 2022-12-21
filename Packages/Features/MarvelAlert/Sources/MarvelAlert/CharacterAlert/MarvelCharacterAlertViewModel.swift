@@ -16,22 +16,20 @@ final class MarvelCharacterAlertViewModel {
         self.character = .init(character)
     }
 
-    func load() {
-        Task { @MainActor in
-            mediaContainerViewModel.load(url: character.value.thumbnailURL)
-            let events = try await dataManager.fetchMarvelEvents()
-            let eventsForCharacter = events.filter {
-                character.value.events.contains($0.id)
-            }
-            if !eventsForCharacter.isEmpty {
-                let titles = String(
-                    eventsForCharacter
-                        .map(\.title)
-                        .reduce(into: "") { $0 += "\($1), " }
-                        .dropLast(2)
-                )
-                eventsTitles.send(titles)
-            }
+    func load() async throws {
+        try await mediaContainerViewModel.load(url: character.value.thumbnailURL)
+        let events = try await dataManager.fetchMarvelEvents()
+        let eventsForCharacter = events.filter {
+            character.value.events.contains($0.id)
+        }
+        if !eventsForCharacter.isEmpty {
+            let titles = String(
+                eventsForCharacter
+                    .map(\.title)
+                    .reduce(into: "") { $0 += "\($1), " }
+                    .dropLast(2)
+            )
+            eventsTitles.send(titles)
         }
     }
 }

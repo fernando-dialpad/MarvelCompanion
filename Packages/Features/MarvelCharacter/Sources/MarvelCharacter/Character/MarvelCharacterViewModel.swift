@@ -8,37 +8,28 @@ import SharedModels
 
 final class MarvelCharacterViewModel {
     var character: CurrentValueSubject<MarvelCharacter, Never>
+    var characterModifiedDate = CurrentValueSubject<String, Never>("")
     var mediaContainerViewModel = MediaContainerViewModel(isRound: true, borderWidth: 0.5)
     var isFavoriteButtonVisible = CurrentValueSubject<Bool, Never>(true)
-    var isDescriptionVisible = CurrentValueSubject<Bool, Never>(true)
+    var isDescriptionVisible: CurrentValueSubject<Bool, Never>
     var isStoriesVisible = CurrentValueSubject<Bool, Never>(true)
-    var modifiedDatePrefix = "%@"
-    @Dependency private var dataManager: MarvelDataManager
     private lazy var relativeDateTimeFormatter: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
         formatter.dateTimeStyle = .named
         formatter.unitsStyle = .abbreviated
         return formatter
     }()
+    @Dependency private var dataManager: MarvelDataManager
 
-    init(character: MarvelCharacter) {
+    init(character: MarvelCharacter, currentDate: Date = Date.now) {
         self.character = .init(character)
-        if character.description.isEmpty {
-            isDescriptionVisible.send(false)
-        }
+        isDescriptionVisible = .init(!character.description.isEmpty)
+        let relativeDateTime = relativeDateTimeFormatter.localizedString(for: character.modifiedDate, relativeTo: currentDate)
+        characterModifiedDate.send(String(format: Strings.updatedAt, relativeDateTime))
     }
 
-    func numberOfStories(_ count: Int) -> String {
-        Strings.numberOfStories(count: count)
-    }
-
-    func modifiedDate(_ date: Date) -> String {
-        let relativeDateTime = relativeDateTimeFormatter.localizedString(for: date, relativeTo: Date.now)
-        return String(format: modifiedDatePrefix, relativeDateTime)
-    }
-
-    func load() {
-        mediaContainerViewModel.load(url: character.value.thumbnailURL)
+    func load() async throws {
+        try await mediaContainerViewModel.load(url: character.value.thumbnailURL)
     }
 
     @MainActor

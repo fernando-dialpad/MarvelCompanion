@@ -7,23 +7,21 @@ import SharedModels
 
 final class MarvelFavoriteListViewModel: ObservableObject {
     @Published var favoriteViewModels: [MarvelFavoriteViewModel] = []
-    var arra = [1,2,3,4,5]
     @Dependency var dataManager: MarvelDataManager
 
-    func load() {
-        Task { @MainActor in
-            let sortedCharacters = try await dataManager.fetchMarvelCharacters()
-                .filter { $0.favoriteRank != .notFavorited }
-                .sorted {
-                    guard
-                        case let .favorited(rank1) = $0.favoriteRank,
-                        case let .favorited(rank2) = $1.favoriteRank
-                    else { return false }
-                    return rank1 < rank2
-                }
-            let viewModels = sortedCharacters.map(MarvelFavoriteViewModel.init(character:))
-            favoriteViewModels = viewModels
-        }
+    @MainActor
+    func load() async throws {
+        let sortedCharacters = try await dataManager.fetchMarvelCharacters()
+            .filter { $0.favoriteRank != .notFavorited }
+            .sorted {
+                guard
+                    case let .favorited(rank1) = $0.favoriteRank,
+                    case let .favorited(rank2) = $1.favoriteRank
+                else { return false }
+                return rank1 < rank2
+            }
+        let viewModels = sortedCharacters.map(MarvelFavoriteViewModel.init(character:))
+        favoriteViewModels = viewModels
     }
 
     func orderFavoriteRank(from: IndexSet, to: Int) {

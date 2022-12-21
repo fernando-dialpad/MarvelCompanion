@@ -3,7 +3,8 @@ import Core
 import Foundation
 import Network
 
-public final class MediaContainerViewModel {
+public final class MediaContainerViewModel: Equatable, Identifiable {
+    public var id = UUID()
     let isRound: Bool
     let borderWidth: Double
     var isLoading = CurrentValueSubject<Bool, Never>(false)
@@ -16,13 +17,15 @@ public final class MediaContainerViewModel {
         self.borderWidth = borderWidth
     }
 
-    public func load(url: URL) {
-        Task { @MainActor [weak self] in
-            guard !isLoaded else { return }
-            isLoading.send(true)
-            try await self?.imageData.send(imageService.fetchImage(url: url))
-            isLoading.send(false)
-            isLoaded = true
-        }
+    public func load(url: URL) async throws {
+        guard !isLoaded else { return }
+        isLoading.send(true)
+        try await imageData.send(imageService.fetchImage(url: url))
+        isLoading.send(false)
+        isLoaded = true
+    }
+
+    public static func == (lhs: MediaContainerViewModel, rhs: MediaContainerViewModel) -> Bool {
+        lhs.id == rhs.id
     }
 }

@@ -15,6 +15,8 @@ struct MarvelFavoriteView: View {
                 .font(.title2)
                 .fontWeight(.bold)
         }
-        .onAppear { viewModel.load() }
+        .onAppear {
+            Task { try await viewModel.load() }
+        }
     }
 }

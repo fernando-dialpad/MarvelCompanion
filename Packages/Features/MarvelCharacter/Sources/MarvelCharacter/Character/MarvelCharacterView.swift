@@ -3,9 +3,12 @@ import Combine
 import CoreUI
 import SharedModels
 import UIKit
+import ComposableArchitecture
 
 final class MarvelCharacterView: UIView {
     private var viewModel: MarvelCharacterViewModel
+//    private var store: StoreOf<MarvelCharacterReducer>
+//    private lazy var viewStore = ViewStore(store)
     private lazy var horizontalStackView: UIStackView = {
         let view = UIStackView()
         view.spacing = 16
@@ -116,6 +119,13 @@ final class MarvelCharacterView: UIView {
         setupBindings()
     }
 
+//    init(store: StoreOf<MarvelCharacterReducer>) {
+//        self.store = store
+//        super.init(frame: .zero)
+//        setupView()
+//        setupBindings()
+//    }
+
     private func setupView() {
         backgroundColor = .white
         translatesAutoresizingMaskIntoConstraints = false
@@ -142,29 +152,38 @@ final class MarvelCharacterView: UIView {
     }
 
     private func setupBindings() {
+//        viewStore.publisher.character
         viewModel.character
             .sink { [weak self] character in
                 self?.nameLabelView.text = character.name
                 self?.descriptionLabelView.text = character.description
-                self?.storiesLabelView.text = self?.viewModel.numberOfStories(character.availableStories)
-                self?.modifiedDateLabelView.text = self?.viewModel.modifiedDate(character.modifiedDate)
+                self?.storiesLabelView.text = Strings.numberOfStories(count: character.availableStories)
                 let favoriteImage = character.favoriteRank == .notFavorited
                     ? UIImage(systemName: "star")
                     : UIImage(systemName: "star.fill")
                 self?.favoriteButtonView.setImage(favoriteImage, for: .normal)
             }
             .store(in: &cancellables)
+        viewModel.characterModifiedDate
+//        viewStore.publisher.characterModifiedDate
+            .sink { [weak self] characterModifiedDate in
+                self?.modifiedDateLabelView.text = characterModifiedDate
+            }
+            .store(in: &cancellables)
+//        viewStore.publisher.isDescriptionVisible
         viewModel.isDescriptionVisible
             .sink { [weak self] isDescriptionVisible in
                 self?.contentHorizontalStackView.isHidden = !isDescriptionVisible
             }
             .store(in: &cancellables)
         viewModel.isFavoriteButtonVisible
+//        viewStore.publisher.isFavoriteButtonVisible
             .sink { [weak self] isFavoriteButtonVisible in
                 self?.favoriteButtonView.isHidden = !isFavoriteButtonVisible
             }
             .store(in: &cancellables)
         viewModel.isStoriesVisible
+//        viewStore.publisher.isStoriesVisible
             .sink { [weak self] isStoriesVisible in
                 self?.storiesLabelView.isHidden = !isStoriesVisible
             }
@@ -172,6 +191,7 @@ final class MarvelCharacterView: UIView {
     }
 
     @objc func tapFavoriteButton() {
+//        viewStore.send(.toggleFavorites)
         Task { try await viewModel.toggleFavorite() }
     }
 }

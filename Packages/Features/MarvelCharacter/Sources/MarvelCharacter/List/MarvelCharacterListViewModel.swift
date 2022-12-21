@@ -15,11 +15,10 @@ final class MarvelCharacterListViewModel {
         characterSelected.send(character)
     }
 
-    @MainActor
     func load() async throws {
         isLoading.send(true)
         let characters = try await dataManager.fetchMarvelCharacters()
-        let viewModels = characters.map(MarvelCharacterViewModel.init(character:))
+        let viewModels = characters.map { MarvelCharacterViewModel(character: $0) }
         characterViewModels.send(viewModels)
         updateCharacters()
         isLoading.send(false)

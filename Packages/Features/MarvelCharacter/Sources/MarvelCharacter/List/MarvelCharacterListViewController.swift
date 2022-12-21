@@ -104,8 +104,7 @@ class MarvelCharacterListViewController: UIViewController, UITableViewDelegate {
     }
 
     private func setupBindings() {
-        viewModel
-            .characterViewModels
+        viewModel.characterViewModels
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 var snapshot = NSDiffableDataSourceSnapshot<Section, MarvelCharacterViewModel>()
@@ -114,8 +113,7 @@ class MarvelCharacterListViewController: UIViewController, UITableViewDelegate {
                 self?.dataSource?.apply(snapshot, animatingDifferences: false)
             }
             .store(in: &cancellables)
-        viewModel
-            .isLoading
+        viewModel.isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 self?.activityIndicator.isHidden = !isLoading
@@ -124,7 +122,7 @@ class MarvelCharacterListViewController: UIViewController, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        viewModel.characterViewModels.value[indexPath.row].load()
+        Task { try await viewModel.characterViewModels.value[indexPath.row].load() }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

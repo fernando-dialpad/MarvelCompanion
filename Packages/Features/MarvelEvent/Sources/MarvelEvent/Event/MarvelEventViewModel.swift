@@ -22,8 +22,8 @@ final class MarvelEventViewModel {
         updateFavorites()
     }
 
-    func load() {
-        mediaContainerViewModel.load(url: event.value.thumbnailURL)
+    func load() async throws {
+        try await mediaContainerViewModel.load(url: event.value.thumbnailURL)
     }
 
     private static func getCharacterNames(for characters: [MarvelCharacter]) -> NSAttributedString {

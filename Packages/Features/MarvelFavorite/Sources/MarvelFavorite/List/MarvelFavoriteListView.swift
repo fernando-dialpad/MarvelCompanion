@@ -36,7 +36,9 @@ struct MarvelFavoriteListView: View {
             }
             Spacer()
         }
-        .onAppear { viewModel.load() }
+        .onAppear {
+            Task { @MainActor in try await viewModel.load() }
+        }
         .environment(\.editMode, Binding.constant(EditMode.active))
     }
 }

@@ -98,7 +98,7 @@ class MarvelEventListViewController: UIViewController, UITableViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.load()
+        Task { try await viewModel.load() }
     }
 
     private func setupView() {
@@ -144,7 +144,9 @@ class MarvelEventListViewController: UIViewController, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        viewModel.eventViewModels.value[indexPath.row].load()
+        Task { @MainActor in
+            try await viewModel.eventViewModels.value[indexPath.row].load()
+        }
     }
 
     @objc private func textFieldDidChange() {

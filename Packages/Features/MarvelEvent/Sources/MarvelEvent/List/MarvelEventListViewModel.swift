@@ -10,19 +10,17 @@ final class MarvelEventListViewModel {
     @Dependency var dataManager: MarvelDataManager
     @Dependency var dataListener: MarvelDataManager
 
-    func load() {
-        Task { @MainActor in
-            isLoading.send(true)
-            let events = try await dataManager.fetchMarvelEvents()
-            let characters = try await dataManager.fetchMarvelCharacters()
-            let viewModels = events.map { event in
-                let charactersInEvent = characters.filter { event.characters.contains($0.id) }
-                return MarvelEventViewModel(event: event, characters: charactersInEvent)
-            }
-            unfilteredViewModels = viewModels
-            eventViewModels.send(viewModels)
-            isLoading.send(false)
+    func load() async throws {
+        isLoading.send(true)
+        let events = try await dataManager.fetchMarvelEvents()
+        let characters = try await dataManager.fetchMarvelCharacters()
+        let viewModels = events.map { event in
+            let charactersInEvent = characters.filter { event.characters.contains($0.id) }
+            return MarvelEventViewModel(event: event, characters: charactersInEvent)
         }
+        unfilteredViewModels = viewModels
+        eventViewModels.send(viewModels)
+        isLoading.send(false)
     }
 
     func filter(by term: String) {

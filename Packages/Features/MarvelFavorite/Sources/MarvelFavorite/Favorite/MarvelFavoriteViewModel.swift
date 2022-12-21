@@ -13,7 +13,7 @@ final class MarvelFavoriteViewModel: ObservableObject, Identifiable {
         self.character = character
     }
 
-    func load() {
-        mediaContainerViewModel.load(url: character.thumbnailURL)
+    func load() async throws {
+        try await mediaContainerViewModel.load(url: character.thumbnailURL)
     }
 }

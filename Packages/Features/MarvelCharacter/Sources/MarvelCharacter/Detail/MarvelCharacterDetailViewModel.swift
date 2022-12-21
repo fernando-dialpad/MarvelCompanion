@@ -18,7 +18,7 @@ final class MarvelCharacterDetailViewModel {
 
     @Dependency private var dataManager: MarvelDataManager
 
-    init(characterViewModel: MarvelCharacterViewModel) {
+    init(character: MarvelCharacter) {
         pillViewModel = PillViewModel(
             backgroundColor: .main.link,
             foregroundColor: .black,
@@ -27,36 +27,33 @@ final class MarvelCharacterDetailViewModel {
             cornerRadius: 25,
             text: ""
         )
+        characterViewModel = MarvelCharacterViewModel(character: character)
         characterViewModel.isDescriptionVisible.send(false)
         characterViewModel.isFavoriteButtonVisible.send(false)
         characterViewModel.isStoriesVisible.send(false)
-        characterViewModel.modifiedDatePrefix = Strings.updatedAt
         isDescriptionVisible.send(!characterViewModel.character.value.description.isEmpty)
         isPillVisible.send(characterViewModel.character.value.favoriteRank != .notFavorited)
-        self.characterViewModel = characterViewModel
     }
 
-    func load() {
-        Task { @MainActor in
-            let events = try await dataManager.fetchMarvelEvents()
-            let eventsForCharacter = events.filter {
-                characterViewModel.character.value.events.contains($0.id)
-            }
-            isEventsVisible.send(!eventsForCharacter.isEmpty)
-            if !eventsForCharacter.isEmpty {
-                eventsHeader.send(String(format: Strings.eventsNumber, eventsForCharacter.count))
-                let titles = String(
-                    eventsForCharacter
+    func load() async throws {
+        let events = try await dataManager.fetchMarvelEvents()
+        let eventsForCharacter = events.filter {
+            characterViewModel.character.value.events.contains($0.id)
+        }
+        isEventsVisible.send(!eventsForCharacter.isEmpty)
+        if !eventsForCharacter.isEmpty {
+            eventsHeader.send(String(format: Strings.eventsNumber, eventsForCharacter.count))
+            let titles = String(
+                eventsForCharacter
                     .map(\.title)
                     .reduce(into: "") { $0 += "\($1), " }
                     .dropLast(2)
-                )
-                eventsTitles.send(titles)
-            }
+            )
+            eventsTitles.send(titles)
         }
     }
 
-    func appear() {
-        characterViewModel.load()
+    func appear() async throws {
+        try await characterViewModel.load()
     }
 }

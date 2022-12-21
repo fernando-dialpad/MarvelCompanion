@@ -48,8 +48,7 @@ public class MarvelCharacterCoordinator {
         viewModel
             .characterSelected
             .sink { [weak self] character in
-                let characterViewModel = MarvelCharacterViewModel(character: character)
-                let viewModel = MarvelCharacterDetailViewModel(characterViewModel: characterViewModel)
+                let viewModel = MarvelCharacterDetailViewModel(character: character)
                 let viewController = MarvelCharacterDetailViewController(viewModel: viewModel)
                 if let tabController = self?.tabController {
                     tabController.present(viewController, animated: true)

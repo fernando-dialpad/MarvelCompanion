@@ -10,22 +10,20 @@ final class MarvelHeaderViewModel {
     @Dependency private var dataListener: MarvelDataListener
 
     func load() {
-        getFavorites()
+        Task { try await getFavorites() }
     }
 
-    private func getFavorites() {
-        Task { @MainActor in
-            let favorites = try await dataManager
-                .fetchMarvelCharacters()
+    private func getFavorites() async throws {
+        let favorites = try await dataManager
+            .fetchMarvelCharacters()
+            .filter { $0.favoriteRank != .notFavorited }
+        favoriteCount.send(favorites.count)
+        isFavoriteVisible.send(!favorites.isEmpty)
+        for await characters in dataListener.updatedCharacters {
+            let favorites = characters
                 .filter { $0.favoriteRank != .notFavorited }
             favoriteCount.send(favorites.count)
             isFavoriteVisible.send(!favorites.isEmpty)
-            for await characters in dataListener.updatedCharacters {
-                let favorites = characters
-                    .filter { $0.favoriteRank != .notFavorited }
-                favoriteCount.send(favorites.count)
-                isFavoriteVisible.send(!favorites.isEmpty)
-            }
         }
     }
 }
